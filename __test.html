@@ -1,0 +1,109 @@
+<!doctype html><meta charset="utf-8">
+<title>hero texture tests</title>
+<style>
+  body { margin:0; font:14px/1.5 ui-monospace,Consolas,monospace; background:#14161a; color:#e6e6e6; }
+  #f { position:fixed; left:-5000px; top:0; border:0; }
+  #out { padding:14px 18px; }
+  h2 { font:600 15px/1.6 ui-monospace,monospace; margin:16px 0 6px; color:#8fd6ff; }
+  .p { color:#6ee7a0; } .f { color:#ff7b7b; font-weight:700; }
+  .row { white-space:pre-wrap; }
+  #sum { margin-top:18px; padding:10px 14px; border-radius:5px; font-weight:700; }
+</style>
+<iframe id="f"></iframe>
+<div id="out">running…</div>
+<script>
+var out = document.getElementById("out"), f = document.getElementById("f");
+var pass = 0, fail = 0, html = "";
+function group(t) { html += "<h2>" + t + "</h2>"; }
+function ok(cond, label, detail) {
+  if (cond) { pass++; html += "<div class='row p'>  PASS  " + label + "</div>"; }
+  else { fail++; html += "<div class='row f'>  FAIL  " + label + (detail ? "   [" + detail + "]" : "") + "</div>"; }
+}
+function load(page, w, h) {
+  return new Promise(function (res) {
+    f.style.width = w + "px"; f.style.height = h + "px"; f.width = w; f.height = h;
+    f.onload = function () { setTimeout(res, 140); };
+    f.src = page + "?t=" + Math.random();
+  });
+}
+function ctx() {
+  var w = f.contentWindow, d = w.document;
+  return { w: w, d: d,
+    q: function (s) { return d.querySelector(s); },
+    qa: function (s) { return Array.prototype.slice.call(d.querySelectorAll(s)); },
+    R: function (s) { var e = d.querySelector(s); return e && e.getBoundingClientRect(); } };
+}
+
+(async function () {
+  await load("index.html", 1440, 900);
+  var c = ctx();
+
+  group("Supplied wood texture on the hero ground");
+  var bef = c.w.getComputedStyle(c.q(".cyp-hero"), "::before");
+  ok(/wood-grain\.png/.test(bef.backgroundImage), "texture applied", bef.backgroundImage.slice(0, 60));
+  ok(bef.mixBlendMode === "screen",
+     "screened, so the green keeps its saturation instead of being greyed", bef.mixBlendMode);
+  ok(bef.backgroundRepeat === "no-repeat",
+     "not repeated (it is one board with a knot, not a tile)", bef.backgroundRepeat);
+  ok(bef.backgroundSize === "cover", "covers the band", bef.backgroundSize);
+  ok(parseFloat(bef.opacity) > 0.2 && parseFloat(bef.opacity) < 0.6,
+     "subtle (opacity " + bef.opacity + ")");
+  ok(bef.transform === "none" || !/rotate/.test(bef.transform),
+     "no rotation: the board already has its own grain direction", bef.transform);
+
+  group("Texture sits under the content, gradient intact");
+  ok(parseInt(bef.zIndex, 10) < parseInt(c.w.getComputedStyle(c.q(".cyp-hero__inner")).zIndex, 10),
+     "grain z-index " + bef.zIndex + " below content z-index " +
+     c.w.getComputedStyle(c.q(".cyp-hero__inner")).zIndex);
+  var hs = c.w.getComputedStyle(c.q(".cyp-hero"));
+  ok((hs.backgroundImage.match(/gradient/g) || []).length >= 3, "layered gradients still present",
+     (hs.backgroundImage.match(/gradient/g) || []).length);
+
+  group("Nothing regressed in the hero");
+  var hero = c.R(".cyp-hero"), headH = c.R(".site-head").height;
+  ok(hero.height <= c.w.innerHeight - headH + 1,
+     "hero " + Math.round(hero.height) + "px fits " + Math.round(c.w.innerHeight - headH) + "px");
+  ok(c.R(".cyp-hero__actions").bottom <= c.w.innerHeight + 1, "buttons above the fold");
+  ok(c.R(".cyp-hero__mark").height >= 270, "wordmark " + Math.round(c.R(".cyp-hero__mark").height) + "px");
+  ok(c.R(".cyp-hero__copy").right <= c.R(".cyp-hero__img").left + 1, "copy left of casket");
+  var img = c.q(".cyp-hero__img");
+  ok(img.complete && img.naturalWidth > 0, "casket still renders");
+  var de = c.d.documentElement;
+  ok(de.scrollWidth <= de.clientWidth, "no horizontal overflow");
+
+  group("Phone");
+  await load("index.html", 390, 1000);
+  c = ctx();
+  var mb = c.w.getComputedStyle(c.q(".cyp-hero"), "::before");
+  ok(/wood-grain\.png/.test(mb.backgroundImage), "texture present on phones");
+  ok(c.w.getComputedStyle(c.q(".cyp-hero__copy")).textAlign === "center", "copy still centred");
+  var mde = c.d.documentElement;
+  ok(mde.scrollWidth <= mde.clientWidth, "no horizontal overflow");
+
+  group("Cypress page");
+  await load("cypress.html", 1440, 900);
+  c = ctx();
+  var pb = c.w.getComputedStyle(c.q(".cyp-page-hero"), "::before");
+  ok(/wood-grain\.png/.test(pb.backgroundImage), "same texture");
+  ok(pb.mixBlendMode === "screen", "same screen blend");
+  var lm = c.R(".cyp-page-hero__mark"), ls = c.R(".cyp-page-hero__shot");
+  ok(Math.abs(lm.height - ls.height) <= 4, "wordmark " + Math.round(lm.height) +
+     "px still matches casket " + Math.round(ls.height) + "px");
+  var cde = c.d.documentElement;
+  ok(cde.scrollWidth <= cde.clientWidth, "no horizontal overflow");
+
+  group("Texture file");
+  var r = await fetch("assets/img/textures/wood-grain.png");
+  ok(r.ok, "served", "HTTP " + r.status);
+  var buf = await r.arrayBuffer(), b = new Uint8Array(buf);
+  var w = (b[16]<<24)|(b[17]<<16)|(b[18]<<8)|b[19];
+  var h = (b[20]<<24)|(b[21]<<16)|(b[22]<<8)|b[23];
+  ok(b[24] === 8 && b[25] === 4, "8-bit greyscale + alpha (colour type 4)",
+     "depth " + b[24] + " type " + b[25]);
+  ok(w === 1400 && h === 788, "1400x788", w + "x" + h);
+  ok(buf.byteLength < 260000, Math.round(buf.byteLength / 1024) + " KB, under the 260 KB budget");
+
+  out.innerHTML = html + "<div id='sum' style='background:" + (fail ? "#5c1f1f" : "#1f5c33") + "'>" +
+    pass + " passed, " + fail + " failed</div>";
+})();
+</script>
