@@ -207,7 +207,7 @@
 
   /* ------------------------------------------------------------------
      Deep links to product anchors
-     The nav links straight to products (caskets-containers.html#eco300).
+     The nav links straight to products (caskets-containers#eco300).
      Product images load after the browser has already jumped, the layout
      shifts underneath it, and the visitor is left parked near the top of
      the page. Re-apply the jump once everything has finished loading,
@@ -251,12 +251,25 @@
      resolved at runtime from the URL rather than hand-edited per page.
      ------------------------------------------------------------------ */
   (function markCurrent() {
-    var path = window.location.pathname.split("/").pop() || "index.html";
+    /* Pages are served without the .html extension, so the same page can be
+       reached as /about, /about.html, or under the /wfp_site/ prefix on the
+       GitHub Pages preview. Both the URL and each href are reduced to a bare
+       page key before they are compared, and the home page answers to "",
+       "index" and "./" alike. Returns null for mailto:, tel: and absolute
+       links so they can never collide with a page name. */
+    function pageKey(value) {
+      var s = String(value).split("#")[0].split("?")[0];
+      if (/^[a-z][a-z0-9+.-]*:/i.test(s) || s.indexOf("//") === 0) return null;
+      s = s.replace(/^.*\//, "").replace(/\.html$/, "");
+      return s === "" || s === "index" ? "home" : s;
+    }
+
+    var path = pageKey(window.location.pathname);
 
     document.querySelectorAll(".nav__item").forEach(function (item) {
       var links = item.querySelectorAll("a[href]");
       var hit = Array.prototype.some.call(links, function (link) {
-        return link.getAttribute("href").split("#")[0] === path;
+        return pageKey(link.getAttribute("href")) === path;
       });
       if (hit) {
         item.classList.add("is-current");
@@ -266,7 +279,7 @@
     });
 
     document.querySelectorAll(".drawer a[href]").forEach(function (link) {
-      if (link.getAttribute("href").split("#")[0] === path) {
+      if (pageKey(link.getAttribute("href")) === path) {
         link.setAttribute("aria-current", "page");
       }
     });
@@ -288,7 +301,7 @@
     var submit = form.querySelector("[data-form-submit]");
 
     // Pre-select the product when arriving from a product page via
-    // contact.html?product=The+Cypress
+    // contact?product=The+Cypress
     var params = new URLSearchParams(window.location.search);
     var wanted = params.get("product");
     if (wanted) {
