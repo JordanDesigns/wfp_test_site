@@ -882,6 +882,20 @@ body.is-locked { overflow: hidden; }
   .sec-head { grid-template-columns: 1fr auto; }
 }
 
+/* Centred variant, used for the home catalogue header. The default splits
+   into title-left and link-right at 860px, so that split is undone here and
+   the link sits centred beneath the text instead. */
+.sec-head--center { justify-items: center; text-align: center; }
+.sec-head--center .sec-head__text { margin-inline: auto; }
+@media (min-width: 860px) {
+  .sec-head--center { grid-template-columns: 1fr; }
+}
+
+/* Pulls a section up towards the one above it. Two adjacent .section blocks
+   stack their padding, which reached about 200px between the home intro and
+   the catalogue header and read as a hole rather than a break. */
+.section--pull-up { padding-top: clamp(2rem, 4vw, 3rem); }
+
 /* --------------------------------------------------------------------------
    9. Category cards
    -------------------------------------------------------------------------- */
