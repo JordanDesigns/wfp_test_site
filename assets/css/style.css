@@ -541,8 +541,13 @@ body.is-locked { overflow: hidden; }
    instead: black areas of the grain leave the ground untouched, and only
    the bright grain lines lift, which keeps the green saturated.
 
-   It is a single board rather than a tile, so it is covered rather than
-   repeated: repeating it would show the knot over and over. */
+   It is a single board rather than a tile, so it is never repeated: that
+   would show the same knot over and over.
+
+   The whole board is drawn, stretched to the band rather than cropped to it.
+   `cover` threw away roughly a third of the image, knots included. The grain
+   runs horizontally, so stretching along its length reads as longer boards
+   rather than as distortion. */
 .cyp-hero::before {
   content: "";
   position: absolute;
@@ -553,7 +558,7 @@ body.is-locked { overflow: hidden; }
   mix-blend-mode: screen;
   background-image: url("../img/textures/wood-grain.png");
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 100% 100%;
   background-position: center;
 }
 .cyp-hero::after {
@@ -665,6 +670,18 @@ body.is-locked { overflow: hidden; }
   .cyp-hero__copy { max-width: none; text-align: center; }
   .cyp-hero__mark { height: clamp(150px, 34vw, 220px); margin-inline: auto; }
   .cyp-hero__actions { justify-content: center; }
+
+  /* On a phone the home hero reads as an advert rather than a page intro:
+     the lede and the secondary Inquire button are dropped so the casket
+     photograph rises into the composition. The Cypress page keeps both. */
+  .cyp-hero__lede,
+  .cyp-hero__inquire { display: none; }
+
+  /* The band is taller than it is wide here, so stretching the whole board
+     into it would squeeze the grain to about a third of its width and it
+     would stop reading as wood. Phones keep the cropped, correctly
+     proportioned grain instead. */
+  .cyp-hero::before { background-size: cover; }
 }
 
 /* NEW sticker: a stamped roundel, angled so it reads as applied by hand
@@ -822,8 +839,14 @@ body.is-locked { overflow: hidden; }
 }
 .strip--wide { margin-top: 0; }
 .strip--wide .strip__inner {
-  justify-content: space-between;
   gap: var(--s3) var(--s5);
+}
+/* Spread across the full width only once all three points fit on one line,
+   which is the same 1280px the desktop nav appears at. Below that they wrap,
+   and space-between pins each wrapped line to the left edge, so they stay
+   centred under the hero instead. */
+@media (min-width: 1280px) {
+  .strip--wide .strip__inner { justify-content: space-between; }
 }
 
 .strip__inner {

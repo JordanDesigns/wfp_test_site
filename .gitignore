@@ -1,0 +1,7 @@
+# Internal working files, not part of the published site: the client brief,
+# the sitemap, the revision notes and the supplied spec sheets.
+/docs/
+
+# OS cruft
+Thumbs.db
+.DS_Store
