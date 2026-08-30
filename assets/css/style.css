@@ -1003,6 +1003,17 @@ body.is-locked { overflow: hidden; }
   overflow: hidden;
 }
 .split__media img { mix-blend-mode: multiply; }
+/* Photographs, unlike the product cut-outs, carry their own background. The
+   multiply blend would sink the sky into the paper ground and leave them
+   muddy, and the mat padding reads as a mistake once the frame is filled, so
+   the photo variant drops both and lets the image fill its frame. */
+.split__media--photo { padding: 0; }
+.split__media--photo img {
+  mix-blend-mode: normal;
+  display: block;
+  width: 100%;
+  height: auto;
+}
 .split__badge {
   position: absolute;
   top: var(--s4); right: var(--s4);
@@ -1027,6 +1038,12 @@ body.is-locked { overflow: hidden; }
   .split--match { align-items: stretch; }
   .split--match .split__media { display: flex; align-items: center; }
   .split--match .split__media img { width: 100%; height: 100%; object-fit: contain; }
+  /* A supplied photograph is shown whole rather than cropped to the text
+     column height: cover was cutting the Brantford skyline off the aerial and
+     the building off the premises shot. The frame stops stretching and takes
+     the height of the image instead. */
+  .split--match .split__media--photo { align-self: center; }
+  .split--match .split__media--photo img { height: auto; }
 }
 
 /* Spec list */
