@@ -841,11 +841,13 @@ body.is-locked { overflow: hidden; }
 .strip--wide .strip__inner {
   gap: var(--s3) var(--s5);
 }
-/* Spread across the full width only once all three points fit on one line,
-   which is the same 1280px the desktop nav appears at. Below that they wrap,
-   and space-between pins each wrapped line to the left edge, so they stay
-   centred under the hero instead. */
-@media (min-width: 1280px) {
+/* Spread across the full width only once all three points genuinely fit on
+   one line, measured at 1360px with the current wording. Below that they
+   wrap, and space-between pins each wrapped line to the left edge, so they
+   stay centred under the hero instead. This is deliberately not tied to the
+   1280px nav breakpoint: it depends on the length of the three strings, so
+   re-measure it if that copy changes. */
+@media (min-width: 1360px) {
   .strip--wide .strip__inner { justify-content: space-between; }
 }
 
