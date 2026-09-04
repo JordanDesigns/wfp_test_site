@@ -8,3 +8,6 @@ Thumbs.db
 
 # Local browser-test harnesses, never part of the site
 __*.html
+
+# Client-supplied source material dropped in for processing, not site content
+/Images to add/

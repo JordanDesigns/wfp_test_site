@@ -243,6 +243,10 @@ body::before {
 .btn--sand:hover { background: var(--white); border-color: var(--white); color: var(--forest-deep); }
 
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.85rem; }
+/* Pills and spec rows carry no bottom margin of their own, so a button row
+   following one sits flush against it. Give it room to breathe. */
+.prod__meta + .btn-row,
+.specs + .btn-row { margin-top: var(--s4); }
 
 /* Underlined text link with a rule that draws in on hover */
 .link-rule {
@@ -1382,6 +1386,11 @@ body.is-locked { overflow: hidden; }
 @media (min-width: 620px)  { .prod-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1000px) { .prod-grid { grid-template-columns: repeat(3, 1fr); } }
 
+/* Four products in a three column grid leave a two cell hole on the second
+   row, which reads as a layout fault rather than a pause. Pages with four
+   hold two columns at the wide breakpoint so both rows stay full. */
+@media (min-width: 1000px) { .prod-grid--two { grid-template-columns: repeat(2, 1fr); } }
+
 .prod {
   display: flex;
   flex-direction: column;
@@ -1419,6 +1428,15 @@ body.is-locked { overflow: hidden; }
   object-fit: cover;
 }
 .prod:hover .prod__media img[data-needs-photo] { transform: none; }
+
+/* Room photographs carry their own background. Multiply sinks that ground
+   into the paper and leaves them muddy, and the mat padding reads as a
+   mistake once the frame is filled, so this variant drops both. */
+.prod__media--photo img {
+  mix-blend-mode: normal;
+  padding: 0;
+  object-fit: cover;
+}
 
 .prod__flag {
   position: absolute;
