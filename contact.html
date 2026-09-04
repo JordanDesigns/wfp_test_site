@@ -701,10 +701,10 @@
         </div>
 
         <div class="contact-layout__form" data-reveal data-delay="1">
-          <!-- FORMSPREE-PENDING: swap the action below for the real Formspree
-               endpoint (https://formspree.io/f/xxxxxxxx). Until then main.js
-               falls back to opening the visitor's email client. -->
-          <form class="form" data-inquiry-form method="POST" action="https://formspree.io/f/FORMSPREE_ENDPOINT" novalidate>
+          <!-- Posts to the client's Formspree form. main.js intercepts the
+               submit, posts it with fetch and reports the result in place;
+               the plain action is the no-JS fallback. -->
+          <form class="form" data-inquiry-form method="POST" action="https://formspree.io/f/xbgjkppd" novalidate>
             <input type="hidden" name="_subject" value="Website inquiry from williamsfuneralproducts.com">
 
             <div class="form__row">

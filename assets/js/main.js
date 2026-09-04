@@ -387,9 +387,9 @@
 
       var endpoint = form.getAttribute("action") || "";
 
-      // FORMSPREE-PENDING: until a real endpoint is supplied, fall back to
-      // opening the visitor's mail client so no inquiry is ever lost.
-      if (!endpoint || endpoint.indexOf("FORMSPREE_ENDPOINT") !== -1) {
+      // If the form ever loses its action, fall back to opening the visitor's
+      // mail client rather than dropping the inquiry on the floor.
+      if (!endpoint) {
         var data = new FormData(form);
         var lines = [];
         data.forEach(function (value, key) {
