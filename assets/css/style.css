@@ -243,6 +243,15 @@ body::before {
 .btn--sand { --btn-bg: var(--sand); --btn-fg: var(--forest-deep); }
 .btn--sand:hover { background: var(--white); border-color: var(--white); color: var(--forest-deep); }
 
+/* Nav-bar sized CTA: the full button is built for page bodies and would
+   crowd the 84px header against the 0.78rem nav links. */
+.btn--nav {
+  padding: 0.66rem 1.2rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+}
+.nav__item--cta { margin-left: 0.6rem; }
+
 .btn-row { display: flex; flex-wrap: wrap; gap: 0.85rem; }
 /* Pills and spec rows carry no bottom margin of their own, so a button row
    following one sits flush against it. Give it room to breathe. */
