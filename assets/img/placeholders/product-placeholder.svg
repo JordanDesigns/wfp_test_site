@@ -1,10 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="Product photograph to follow">
   <rect width="800" height="600" fill="#f3ece1"/>
   <rect x="0.5" y="0.5" width="799" height="599" fill="none" stroke="#241c1a" stroke-opacity="0.14"/>
-  <g transform="translate(310 188) scale(0.1364)" opacity="0.16">
-    <path fill="#662a2c" fill-rule="evenodd" d="M672.86,512.9L475.48,46.1h369.11l-171.73,466.8M0,46.1h417.46l206.84,502.4-209.35,493.9L112.18,315.1,0,46.1ZM1320.07,46.1l-245.24,727.3-92.52,269-259.64-492.5L902.61,46.1h417.46Z"/>
-    <polyline fill="#dfc7a8" fill-rule="evenodd" points="642.94 443.5 806.01 0 455.01 0 642.94 443.5"/>
+  <g fill="none" stroke="#241c1a" stroke-opacity="0.18" stroke-width="6">
+    <rect x="322" y="212" width="156" height="118" rx="6"/>
+    <path d="M322 296l44-40 38 34 30-26 44 38" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
+  <circle cx="372" cy="248" r="11" fill="#241c1a" fill-opacity="0.18"/>
   <text x="400" y="410" text-anchor="middle"
         font-family="Archivo, Helvetica, Arial, sans-serif" font-size="19" font-weight="600"
         letter-spacing="4.2" fill="#9a8d86">PHOTOGRAPH TO FOLLOW</text>
