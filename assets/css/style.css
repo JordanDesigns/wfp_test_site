@@ -1034,7 +1034,13 @@ body.is-locked { overflow: hidden; }
 }
 
 @media (min-width: 680px)  { .cat-grid { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 1060px) { .cat-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1060px) {
+  .cat-grid { grid-template-columns: repeat(3, 1fr); }
+  /* The featured card closes the grid. Spanning the full row keeps it from
+     stranding empty cells, whose backdrop is the grid's own rule colour, as
+     the number of categories changes. */
+  .cat-grid .cat-card--accent { grid-column: 1 / -1; }
+}
 
 /* --------------------------------------------------------------------------
    10. Values / three-column editorial
