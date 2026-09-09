@@ -1461,7 +1461,9 @@ body.is-locked { overflow: hidden; }
   border: 1px solid var(--rule);
   border-radius: 3px;
   overflow: hidden;
-  scroll-margin-top: calc(var(--head-h) + 1.5rem);
+  /* No scroll-margin-top here: html already carries scroll-padding-top for
+     the sticky header, and the two stack, dropping a deep-linked product
+     twice as far down the screen as every other anchor target. */
   transition: border-color 0.35s var(--ease), box-shadow 0.35s var(--ease),
               transform 0.35s var(--ease);
 }

@@ -208,10 +208,21 @@
   /* ------------------------------------------------------------------
      Deep links to product anchors
      The nav links straight to products (caskets-containers#eco300).
-     Product images load after the browser has already jumped, the layout
-     shifts underneath it, and the visitor is left parked near the top of
-     the page. Re-apply the jump once everything has finished loading,
-     unless the visitor has started scrolling themselves in the meantime.
+     Two things break the browser's own jump to the fragment:
+
+     1. The stylesheet sets html { scroll-behavior: smooth }, and Chrome
+        simply drops the fragment scroll on initial page load when it is
+        set. Without this handler the visitor lands at the top of the page.
+     2. Product images load after any jump has happened and the layout
+        shifts underneath it.
+
+     So re-apply the jump once everything has finished loading, unless the
+     visitor has started scrolling themselves in the meantime. The jump has
+     to be instant: scrollIntoView's default "auto" resolves to the CSS
+     scroll-behavior, which is the smooth value that is being dropped in the
+     first place. Rather than pass behavior: "instant", which throws on
+     Safari before 15.4, briefly set scroll-behavior on the root element,
+     which every browser honours.
      ------------------------------------------------------------------ */
   (function fixFragmentScroll() {
     if (!window.location.hash || window.location.hash === "#") return;
@@ -233,9 +244,13 @@
     window.addEventListener("touchmove", markMoved, { passive: true, once: true });
     window.addEventListener("keydown", markMoved, { once: true });
 
+    var root = document.documentElement;
     var settle = function () {
       if (userMoved) return;
-      target.scrollIntoView({ block: "start", behavior: "auto" });
+      var previous = root.style.scrollBehavior;
+      root.style.scrollBehavior = "auto";
+      target.scrollIntoView({ block: "start" });
+      root.style.scrollBehavior = previous;
     };
 
     window.addEventListener("load", function () {
