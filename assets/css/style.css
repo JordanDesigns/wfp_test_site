@@ -243,6 +243,26 @@ body::before {
 .btn--sand { --btn-bg: var(--sand); --btn-fg: var(--forest-deep); }
 .btn--sand:hover { background: var(--white); border-color: var(--white); color: var(--forest-deep); }
 
+/* The home intro's Download Catalogue CTA. It has to carry more weight than
+   the burgundy primary sitting above it, so it takes the forest green, a
+   wider box and a soft lift. The hue does most of the work; the extra size
+   only reinforces it. */
+.btn--feature {
+  --btn-bg: var(--forest);
+  --btn-fg: var(--white);
+  padding: 1.1rem 2.1rem;
+  font-size: 0.85rem;
+  box-shadow: 0 10px 24px -14px rgba(47, 74, 56, 0.85);
+}
+.btn--feature:hover {
+  background: var(--forest-deep);
+  border-color: var(--forest-deep);
+  box-shadow: 0 14px 30px -14px rgba(47, 74, 56, 0.9);
+}
+/* The arrow points down, so the hover nudge follows it instead of sliding
+   right the way the forward arrows do. */
+.btn--feature:hover .btn__arrow { transform: translateY(3px); }
+
 /* Nav-bar sized CTA: the full button is built for page bodies and would
    crowd the 84px header against the 0.78rem nav links. */
 .btn--nav {
@@ -847,6 +867,10 @@ body.is-locked { overflow: hidden; }
 }
 .intro__title em { display: block; font-style: normal; color: var(--burgundy); }
 .intro__actions { margin-top: var(--s5); }
+/* The Download Catalogue row sits on its own line under the two primaries,
+   tucked closer to them than the block above so the three still read as one
+   group of actions. */
+.intro__actions--feature { margin-top: var(--s3); }
 @media (min-width: 900px) {
   /* The headline column is much shorter than the copy column, so it is
      centred against it rather than top-aligned, which would leave a hole
