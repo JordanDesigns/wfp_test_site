@@ -1574,3 +1574,45 @@ body.is-locked { overflow: hidden; }
   padding-top: 0.85rem;
   border-top: 1px solid var(--rule);
 }
+
+/* ---------- Full catalogue (caskets page) ---------- */
+.catalogue { border-top: 1px solid var(--rule); }
+.catalogue__viewer {
+  height: min(85vh, 1100px);
+  background: var(--paper-warm);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.catalogue__viewer object { display: block; width: 100%; height: 100%; }
+.catalogue__fallback {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  padding: 1.5rem;
+  text-align: center;
+}
+.catalogue__actions { justify-content: center; margin-top: 1.5rem; }
+/* Phones and tablets do not scroll an embedded PDF (iOS shows page one only,
+   Android shows nothing), so catalogue.js draws the pages with PDF.js. Until
+   it has, or if it cannot, only the open button shows. */
+.catalogue__pages {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+}
+.catalogue__page {
+  aspect-ratio: 612 / 792;
+  background: var(--white);
+  box-shadow: 0 1px 3px rgba(36, 28, 26, 0.12);
+}
+.catalogue__page canvas { display: block; width: 100%; height: 100%; }
+@media (max-width: 899px) {
+  .catalogue__viewer { display: none; height: 78vh; }
+  .catalogue__viewer--paged { display: block; }
+  .catalogue__viewer object { display: none; }
+}
